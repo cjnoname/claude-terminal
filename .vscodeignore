@@ -1,10 +1,11 @@
 *.vsix
 .git/**
 .github/**
+.gitignore
 .vscodeignore
+.vsixmanifest
 eslint.config.js
 node_modules/**
 package-lock.json
 scripts/**
 test/**
-.vsixmanifest
