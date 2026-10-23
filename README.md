@@ -1,6 +1,6 @@
 # Claude Terminal
 
-> **Unofficial community extension.** Not affiliated with, endorsed by, or sponsored by Anthropic. "Claude" is a trademark of Anthropic, PBC.
+> Not affiliated with, endorsed by, or sponsored by Anthropic. "Claude" is a trademark of Anthropic, PBC.
 
 Run the [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code/overview) next to your code with one shortcut. Then switch to something else. This extension tells you **when Claude finishes** and, just as important, **when Claude is stuck waiting for your permission**. You get a sound, a desktop notification, or a push to your phone, and one click takes you back to the right session.
 
