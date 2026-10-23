@@ -1,0 +1,656 @@
+{
+	"name": "claude-terminal",
+	"displayName": "Claude Terminal",
+	"publisher": "cjnoname",
+	"description": "Unofficial. Run Claude Code CLI in the editor with one shortcut. Get sound, desktop and phone alerts when Claude finishes or waits for your permission. Session list and usage stats included.",
+	"version": "2.0.0",
+	"icon": "icon.png",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cjnoname/claude-terminal"
+	},
+	"bugs": {
+		"url": "https://github.com/cjnoname/claude-terminal/issues"
+	},
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"categories": [
+		"AI",
+		"Other"
+	],
+	"keywords": [
+		"claude",
+		"claude code",
+		"cli",
+		"terminal",
+		"notification",
+		"sound",
+		"alert",
+		"permission",
+		"ntfy",
+		"usage"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./src/extension.js",
+	"scripts": {
+		"lint": "eslint .",
+		"test": "node --test test/",
+		"check": "npm run lint && npm test",
+		"icon": "node scripts/make-icon.js",
+		"package": "npx -y @vscode/vsce package",
+		"vscode:uninstall": "node ./src/uninstall.js",
+		"test:core": "node --test test/core.test.js",
+		"release": "node scripts/should-publish.js"
+	},
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "claudeTerminal",
+					"title": "Claude Terminal",
+					"icon": "media/activity.svg"
+				}
+			]
+		},
+		"views": {
+			"claudeTerminal": [
+				{
+					"id": "claudeTerminal.sessions",
+					"name": "Sessions",
+					"icon": "media/activity.svg"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "claudeTerminal.sessions",
+				"contents": "No recent Claude sessions in this workspace.\n[Start Claude](command:claude-terminal.newSession)\n[Continue last conversation](command:claude-terminal.continue)"
+			}
+		],
+		"commands": [
+			{
+				"command": "claude-terminal.open",
+				"title": "Open / Focus Claude",
+				"category": "Claude Terminal",
+				"icon": "media/activity.svg"
+			},
+			{
+				"command": "claude-terminal.newSession",
+				"title": "New Claude Session",
+				"category": "Claude Terminal",
+				"icon": "$(add)"
+			},
+			{
+				"command": "claude-terminal.continue",
+				"title": "Continue Last Conversation",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.resume",
+				"title": "Resume a Conversation…",
+				"category": "Claude Terminal",
+				"icon": "$(history)"
+			},
+			{
+				"command": "claude-terminal.focusClaude",
+				"title": "Jump to Session Needing Attention",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.openSession",
+				"title": "Open Session",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.resumeSession",
+				"title": "Resume in New Terminal",
+				"category": "Claude Terminal",
+				"icon": "$(debug-restart)"
+			},
+			{
+				"command": "claude-terminal.copySessionId",
+				"title": "Copy Session ID",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.revealTranscript",
+				"title": "Open Transcript File",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.refreshSessions",
+				"title": "Refresh Sessions",
+				"category": "Claude Terminal",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "claude-terminal.sendSelection",
+				"title": "Send Selection to Claude",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.sendFile",
+				"title": "Send File to Claude",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.toggleDnd",
+				"title": "Toggle Do Not Disturb",
+				"category": "Claude Terminal",
+				"icon": "$(bell-slash)"
+			},
+			{
+				"command": "claude-terminal.testSound",
+				"title": "Test Alert",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.chooseSound",
+				"title": "Choose Alert Sound…",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.setupPush",
+				"title": "Set Up Phone Notifications…",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.installHooks",
+				"title": "Enable Precise Alerts (Install Claude Code Hooks)",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.uninstallHooks",
+				"title": "Remove Claude Code Hooks",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.clearAlerts",
+				"title": "Clear Alerts",
+				"category": "Claude Terminal",
+				"icon": "$(clear-all)"
+			},
+			{
+				"command": "claude-terminal.refreshUsage",
+				"title": "Refresh Usage",
+				"category": "Claude Terminal"
+			},
+			{
+				"command": "claude-terminal.showLog",
+				"title": "Show Log",
+				"category": "Claude Terminal"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "claude-terminal.open",
+				"key": "ctrl+f1",
+				"mac": "cmd+f1"
+			},
+			{
+				"command": "claude-terminal.newSession",
+				"key": "ctrl+shift+f1",
+				"mac": "cmd+shift+f1"
+			},
+			{
+				"command": "claude-terminal.focusClaude",
+				"key": "ctrl+alt+f1",
+				"mac": "cmd+alt+f1"
+			},
+			{
+				"command": "claude-terminal.sendSelection",
+				"key": "ctrl+alt+k",
+				"mac": "cmd+alt+k",
+				"when": "editorTextFocus"
+			}
+		],
+		"menus": {
+			"editor/title": [
+				{
+					"command": "claude-terminal.open",
+					"group": "navigation"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "claude-terminal.sendSelection",
+					"group": "claude@1"
+				}
+			],
+			"explorer/context": [
+				{
+					"command": "claude-terminal.sendFile",
+					"group": "claude@1"
+				}
+			],
+			"view/title": [
+				{
+					"command": "claude-terminal.newSession",
+					"when": "view == claudeTerminal.sessions",
+					"group": "navigation@1"
+				},
+				{
+					"command": "claude-terminal.resume",
+					"when": "view == claudeTerminal.sessions",
+					"group": "navigation@2"
+				},
+				{
+					"command": "claude-terminal.refreshSessions",
+					"when": "view == claudeTerminal.sessions",
+					"group": "navigation@3"
+				},
+				{
+					"command": "claude-terminal.clearAlerts",
+					"when": "view == claudeTerminal.sessions",
+					"group": "1_alerts@1"
+				},
+				{
+					"command": "claude-terminal.toggleDnd",
+					"when": "view == claudeTerminal.sessions",
+					"group": "1_alerts@2"
+				},
+				{
+					"command": "claude-terminal.chooseSound",
+					"when": "view == claudeTerminal.sessions",
+					"group": "1_alerts@3"
+				},
+				{
+					"command": "claude-terminal.testSound",
+					"when": "view == claudeTerminal.sessions",
+					"group": "1_alerts@4"
+				},
+				{
+					"command": "claude-terminal.setupPush",
+					"when": "view == claudeTerminal.sessions",
+					"group": "1_alerts@5"
+				},
+				{
+					"command": "claude-terminal.installHooks",
+					"when": "view == claudeTerminal.sessions && claudeTerminal.hooks != current",
+					"group": "2_setup@1"
+				},
+				{
+					"command": "claude-terminal.uninstallHooks",
+					"when": "view == claudeTerminal.sessions && claudeTerminal.hooks != none",
+					"group": "2_setup@2"
+				},
+				{
+					"command": "claude-terminal.showLog",
+					"when": "view == claudeTerminal.sessions",
+					"group": "2_setup@3"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "claude-terminal.resumeSession",
+					"when": "view == claudeTerminal.sessions && viewItem == session",
+					"group": "inline"
+				},
+				{
+					"command": "claude-terminal.resumeSession",
+					"when": "view == claudeTerminal.sessions",
+					"group": "1@1"
+				},
+				{
+					"command": "claude-terminal.copySessionId",
+					"when": "view == claudeTerminal.sessions",
+					"group": "2@1"
+				},
+				{
+					"command": "claude-terminal.revealTranscript",
+					"when": "view == claudeTerminal.sessions",
+					"group": "2@2"
+				}
+			],
+			"commandPalette": [
+				{
+					"command": "claude-terminal.openSession",
+					"when": "false"
+				},
+				{
+					"command": "claude-terminal.resumeSession",
+					"when": "false"
+				},
+				{
+					"command": "claude-terminal.copySessionId",
+					"when": "false"
+				},
+				{
+					"command": "claude-terminal.revealTranscript",
+					"when": "false"
+				},
+				{
+					"command": "claude-terminal.sendFile",
+					"when": "false"
+				}
+			]
+		},
+		"configuration": [
+			{
+				"title": "Terminal",
+				"properties": {
+					"claudeTerminal.terminal.command": {
+						"type": "string",
+						"default": "claude",
+						"description": "Command used to start Claude Code. User settings only (a workspace cannot change it).",
+						"scope": "machine"
+					},
+					"claudeTerminal.terminal.args": {
+						"type": "string",
+						"default": "",
+						"description": "Extra arguments for every session, e.g. `--model opus`.",
+						"scope": "machine"
+					},
+					"claudeTerminal.terminal.location": {
+						"type": "string",
+						"enum": [
+							"editor",
+							"panel"
+						],
+						"default": "editor",
+						"description": "Where Claude opens."
+					},
+					"claudeTerminal.terminal.openToSide": {
+						"type": "boolean",
+						"default": true,
+						"description": "When files are open, split and open Claude beside them."
+					},
+					"claudeTerminal.terminal.reuseExisting": {
+						"type": "boolean",
+						"default": true,
+						"description": "The main shortcut focuses an existing Claude terminal instead of starting a new one."
+					},
+					"claudeTerminal.terminal.assignSessionId": {
+						"type": "boolean",
+						"default": true,
+						"markdownDescription": "Start new sessions with `--session-id <uuid>` so alerts are linked to the exact terminal without hooks. Turn off if your `terminal.command` is a wrapper that doesn't accept Claude Code flags."
+					}
+				}
+			},
+			{
+				"title": "Alerts",
+				"properties": {
+					"claudeTerminal.notification.onDone": {
+						"type": "boolean",
+						"default": true,
+						"description": "Alert when Claude finishes a task."
+					},
+					"claudeTerminal.notification.onAttention": {
+						"type": "boolean",
+						"default": true,
+						"description": "Alert when Claude needs permission, asks a question or presents a plan."
+					},
+					"claudeTerminal.notification.minDurationSeconds": {
+						"type": "number",
+						"default": 0,
+						"minimum": 0,
+						"description": "Only alert for finished tasks that took at least this many seconds. Skips quick replies."
+					},
+					"claudeTerminal.notification.scope": {
+						"type": "string",
+						"enum": [
+							"workspace",
+							"all"
+						],
+						"default": "workspace",
+						"enumDescriptions": [
+							"Sessions inside this window's workspace folders only (no duplicate alerts across windows).",
+							"Every Claude session on this machine."
+						],
+						"description": "Which Claude sessions this window tracks."
+					},
+					"claudeTerminal.notification.suppressWhenFocused": {
+						"type": "boolean",
+						"default": true,
+						"description": "Stay quiet when you're already looking at that Claude session."
+					},
+					"claudeTerminal.notification.systemNotification": {
+						"type": "boolean",
+						"default": true,
+						"description": "Desktop notification when VS Code is in the background."
+					},
+					"claudeTerminal.notification.showBell": {
+						"type": "boolean",
+						"default": true,
+						"description": "Status bar indicator until you return to Claude. Click it to jump to the right session."
+					},
+					"claudeTerminal.notification.showMessage": {
+						"type": "boolean",
+						"default": false,
+						"description": "Also show a VS Code notification popup."
+					},
+					"claudeTerminal.notification.showDndToggle": {
+						"type": "boolean",
+						"default": true,
+						"description": "Show a mute button in the status bar."
+					},
+					"claudeTerminal.notification.quietHours": {
+						"type": "string",
+						"default": "",
+						"pattern": "^(\\s*|\\d{1,2}:\\d{2}\\s*-\\s*\\d{1,2}:\\d{2})$",
+						"markdownDescription": "Mute sounds and desktop alerts during these hours, e.g. `22:00-08:00`. Leave empty to disable."
+					},
+					"claudeTerminal.notification.detectPermissionPrompts": {
+						"type": "boolean",
+						"default": true,
+						"description": "Without hooks: work out from your permission rules whether a tool call is waiting for approval."
+					},
+					"claudeTerminal.notification.permissionDelaySeconds": {
+						"type": "number",
+						"default": 8,
+						"minimum": 2,
+						"description": "Without hooks, when it's unclear whether a tool needs approval: how long it may run before it counts as waiting."
+					},
+					"claudeTerminal.notification.showDetails": {
+						"type": "boolean",
+						"default": true,
+						"description": "Include the reply summary or tool command in desktop notifications. Turn off if your screen is visible to others."
+					},
+					"claudeTerminal.notification.sound": {
+						"type": "boolean",
+						"default": true,
+						"markdownDeprecationMessage": "Replaced by `#claudeTerminal.sound.enabled#`."
+					}
+				}
+			},
+			{
+				"title": "Sound",
+				"properties": {
+					"claudeTerminal.sound.enabled": {
+						"type": "boolean",
+						"default": true,
+						"description": "Play sounds."
+					},
+					"claudeTerminal.sound.volume": {
+						"type": "number",
+						"default": 50,
+						"minimum": 0,
+						"maximum": 100,
+						"description": "Volume 0–100."
+					},
+					"claudeTerminal.sound.done.name": {
+						"type": "string",
+						"enum": [
+							"Basso",
+							"Blow",
+							"Bottle",
+							"Frog",
+							"Funk",
+							"Glass",
+							"Hero",
+							"Morse",
+							"Ping",
+							"Pop",
+							"Purr",
+							"Sosumi",
+							"Submarine",
+							"Tink"
+						],
+						"default": "Glass",
+						"description": "macOS sound for 'finished'. Use 'Choose Alert Sound…' to preview."
+					},
+					"claudeTerminal.sound.attention.name": {
+						"type": "string",
+						"enum": [
+							"Basso",
+							"Blow",
+							"Bottle",
+							"Frog",
+							"Funk",
+							"Glass",
+							"Hero",
+							"Morse",
+							"Ping",
+							"Pop",
+							"Purr",
+							"Sosumi",
+							"Submarine",
+							"Tink"
+						],
+						"default": "Ping",
+						"description": "macOS sound for 'needs input'."
+					},
+					"claudeTerminal.sound.done.customFile": {
+						"type": "string",
+						"default": "",
+						"description": "Custom audio file for 'finished' (wav/mp3/aiff…).",
+						"scope": "machine"
+					},
+					"claudeTerminal.sound.attention.customFile": {
+						"type": "string",
+						"default": "",
+						"description": "Custom audio file for 'needs input'.",
+						"scope": "machine"
+					},
+					"claudeTerminal.sound.repeatAttentionSeconds": {
+						"type": "number",
+						"default": 0,
+						"minimum": 0,
+						"description": "Replay the 'needs input' sound every N seconds until you respond. 0 = off."
+					},
+					"claudeTerminal.sound.speak": {
+						"type": "boolean",
+						"default": false,
+						"description": "Also announce alerts by voice, e.g. 'Claude finished in my-project'."
+					}
+				}
+			},
+			{
+				"title": "Phone notifications",
+				"properties": {
+					"claudeTerminal.push.provider": {
+						"type": "string",
+						"enum": [
+							"none",
+							"ntfy",
+							"bark",
+							"telegram",
+							"webhook"
+						],
+						"default": "none",
+						"markdownDescription": "Send alerts to your phone. Run **Claude Terminal: Set Up Phone Notifications…**. Credentials are kept in VS Code secure storage, not in settings.",
+						"scope": "machine"
+					},
+					"claudeTerminal.push.delaySeconds": {
+						"type": "number",
+						"default": 30,
+						"minimum": 0,
+						"description": "Only push if the alert is still unanswered after this many seconds."
+					},
+					"claudeTerminal.push.onlyWhenAway": {
+						"type": "boolean",
+						"default": true,
+						"description": "Don't push while the VS Code window is focused."
+					},
+					"claudeTerminal.push.onDone": {
+						"type": "boolean",
+						"default": true,
+						"description": "Push when a task finishes."
+					},
+					"claudeTerminal.push.onAttention": {
+						"type": "boolean",
+						"default": true,
+						"description": "Push when Claude needs input."
+					},
+					"claudeTerminal.push.respectQuietHours": {
+						"type": "boolean",
+						"default": true,
+						"description": "No pushes during quiet hours."
+					},
+					"claudeTerminal.push.ntfyServer": {
+						"type": "string",
+						"default": "https://ntfy.sh",
+						"description": "ntfy server URL.",
+						"scope": "machine"
+					},
+					"claudeTerminal.push.content": {
+						"type": "string",
+						"enum": [
+							"generic",
+							"project",
+							"full"
+						],
+						"default": "generic",
+						"enumDescriptions": [
+							"Only \"Claude finished\" / \"Claude needs your input\".",
+							"Also the project folder name.",
+							"Also the reply summary or the command awaiting approval (may expose code details on your lock screen)."
+						],
+						"description": "How much detail phone notifications contain.",
+						"scope": "machine"
+					}
+				}
+			},
+			{
+				"title": "Sessions & Usage",
+				"properties": {
+					"claudeTerminal.sessions.recentHours": {
+						"type": "number",
+						"default": 24,
+						"minimum": 1,
+						"description": "Show sessions active within this many hours."
+					},
+					"claudeTerminal.usage.showInStatusBar": {
+						"type": "boolean",
+						"default": true,
+						"description": "Show today's token usage in the status bar."
+					},
+					"claudeTerminal.usage.showCost": {
+						"type": "boolean",
+						"default": true,
+						"description": "Show an estimated cost at public API list prices (unknown models are not priced)."
+					},
+					"claudeTerminal.usage.customPricing": {
+						"type": "object",
+						"default": {},
+						"additionalProperties": {
+							"type": "object",
+							"properties": {
+								"input": {
+									"type": "number"
+								},
+								"output": {
+									"type": "number"
+								}
+							},
+							"required": [
+								"input",
+								"output"
+							]
+						},
+						"markdownDescription": "USD per million tokens for models, matched by substring of the model id, e.g. `{\"my-model\": {\"input\": 3, \"output\": 15}}`. Overrides built-in prices."
+					}
+				}
+			}
+		]
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"eslint": "^10.13.0",
+		"globals": "^17.13.0"
+	}
+}
