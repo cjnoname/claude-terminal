@@ -3,7 +3,7 @@
 	"displayName": "Claude Terminal",
 	"publisher": "cjnoname",
 	"description": "Unofficial. Run Claude Code CLI in the editor with one shortcut. Get sound, desktop and phone alerts when Claude finishes or waits for your permission. Session list and usage stats included.",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"icon": "icon.png",
 	"license": "MIT",
 	"repository": {

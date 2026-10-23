@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0
+## 2.0.1
 - New original icon; listing marked as an unofficial community extension.
 - Sessions view in the activity bar: live status, jump to a session or resume it.
 - Permission-prompt detection based on your Claude Code permission rules and mode, including messages with several tool calls.
