@@ -1,4 +1,4 @@
-name: CI / Release
+name: CI
 
 on:
   push:
@@ -40,39 +40,3 @@ jobs:
         with:
           name: vsix
           path: '*.vsix'
-
-  release:
-    name: Publish to Marketplace (when the version is bumped)
-    needs: [core, full]
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      VSCE_PAT: ${{ secrets.VSCE_PAT }}
-      OVSX_PAT: ${{ secrets.OVSX_PAT }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - id: check
-        run: node scripts/should-publish.js
-      - if: steps.check.outputs.publish == 'true' && env.VSCE_PAT == ''
-        run: echo "::warning::Version ${{ steps.check.outputs.version }} is not published yet, but the VSCE_PAT secret is missing — skipping release."
-      - if: steps.check.outputs.publish == 'true' && env.VSCE_PAT != ''
-        run: npx -y @vscode/vsce package -o claude-terminal-${{ steps.check.outputs.version }}.vsix
-      - if: steps.check.outputs.publish == 'true' && env.VSCE_PAT != ''
-        name: Publish to VS Code Marketplace
-        run: npx -y @vscode/vsce publish --packagePath claude-terminal-${{ steps.check.outputs.version }}.vsix
-      - if: steps.check.outputs.publish == 'true' && env.VSCE_PAT != '' && env.OVSX_PAT != ''
-        name: Publish to Open VSX (Cursor, Windsurf, VSCodium)
-        run: npx -y ovsx publish claude-terminal-${{ steps.check.outputs.version }}.vsix
-      - if: steps.check.outputs.publish == 'true' && env.VSCE_PAT != ''
-        name: Tag + GitHub release
-        run: |
-          gh release create "v${{ steps.check.outputs.version }}" "claude-terminal-${{ steps.check.outputs.version }}.vsix" \
-            --target "$GITHUB_SHA" --title "v${{ steps.check.outputs.version }}" \
-            --notes "See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md)."
-        env:
-          GH_TOKEN: ${{ github.token }}

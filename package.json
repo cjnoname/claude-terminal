@@ -43,8 +43,7 @@
 		"icon": "node scripts/make-icon.js",
 		"package": "npx -y @vscode/vsce package",
 		"vscode:uninstall": "node ./src/uninstall.js",
-		"test:core": "node --test test/core.test.js",
-		"release": "node scripts/should-publish.js"
+		"test:core": "node --test test/core.test.js"
 	},
 	"contributes": {
 		"viewsContainers": {

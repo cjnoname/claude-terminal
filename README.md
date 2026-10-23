@@ -72,7 +72,6 @@ npm ci
 npm run check   # lint + tests
 ```
 
-Releasing: bump `version` in `package.json` and add a `CHANGELOG.md` entry, then push to `main`. CI runs the tests. If the version is newer than the one on the Marketplace, it publishes, tags `vX.Y.Z` and creates a GitHub release with the `.vsix` attached. This needs the `VSCE_PAT` repository secret. Add an `OVSX_PAT` secret as well to also publish to Open VSX.
 
 ## License
 
